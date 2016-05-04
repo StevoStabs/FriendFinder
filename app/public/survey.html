@@ -147,7 +147,12 @@
 				totalScore += parseInt(answersArray[i]);
 			}
 			
-			
+			var currentURL = window.location.origin;
+
+			$.post( currentURL + "/api/friends",
+			 ).done(function(data){
+			 	console.log(data);
+			 }) 
 		
 		});
 
