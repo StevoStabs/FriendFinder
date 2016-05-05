@@ -120,40 +120,60 @@
 	</div>
 	<script type="text/javascript">
 		
+		// when the submit button is clicked
 		$('#submit').on('click', function(){
 
-			var q1 = $("input:radio[name=q1]:checked").val();
-			var q2 = $("input:radio[name=q2]:checked").val();
-			var q3 = $("input:radio[name=q3]:checked").val();
-			var q4 = $("input:radio[name=q4]:checked").val();
-			var q5 = $("input:radio[name=q5]:checked").val();
-			var q6 = $("input:radio[name=q6]:checked").val();
-			var q7 = $("input:radio[name=q7]:checked").val();
-			var q8 = $("input:radio[name=q8]:checked").val();
-			var q9 = $("input:radio[name=q9]:checked").val();
-			var q10 = $("input:radio[name=q10]:checked").val();
+			if($("#name").val().trim() == ''){
+				alert("Please enter your name.");
+				return;
+			}
+			if($("#image").val().trim() == ''){
+				alert("Please enter your photo url.");
+				return;
+			}
 
+			// create an empty array to hold the user answers
+			var answersArray = [];
 
-			var answersArray = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10];
+			// loop through all questions and push the user answers into the array
+			for(i=1; i<=10; i++){
+				// check to make sure all questions were answered by user
+				if( $("input:radio[name=q"+i+"]:checked").val() == null ){
+					alert("Please answer all questions.");
+					return;
+				} else {
+				answersArray.push( $("input:radio[name=q"+i+"]:checked").val() );
+				}
+			}
+			
+			// console.log(answersArray);
 
+			// create an object containing all of the users input
 			var friendObject = {
 				name: $('#name').val().trim(),
 				photo: $('#image').val().trim(),
 				scores: answersArray
 			};
 
-			var totalScore = 0;
-			for(i=0; i<answersArray.length; i++){
-				totalScore += parseInt(answersArray[i]);
-			}
+			// console.log(friendObject);
 			
 			var currentURL = window.location.origin;
 
-			$.post( currentURL + "/api/friends",
+			// post the user object to the friends api array
+			$.post( currentURL + "/api/friends", friendObject
 			 ).done(function(data){
-			 	console.log(data);
+			 	console.log(data.name);
+			 	console.log(data.photo);
+
+			 	
 			 }) 
-		
+
+			// clear form data
+			$("#name").val('');
+			$("#image").val('');
+			$("input:radio").attr("checked", false);
+			
+		return;
 		});
 
 	</script>
